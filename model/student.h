@@ -8,6 +8,7 @@ class Student
 public:
     typedef const Student& const_ref;
 
+    Student();
     Student(const QString& first, const QString& second, const QString& middle,
             const QDate& birth, const QDate& enrollment, const QDate& graduation);
     Student(const_ref student);
@@ -29,6 +30,7 @@ public:
     void setGraduationDate(const QDate &value);
 
     bool operator== (const_ref student) const;
+    bool operator!= (const_ref student) const;
 
 private:
     QString capitalizeString(const QString& str);

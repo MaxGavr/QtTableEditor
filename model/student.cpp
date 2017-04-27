@@ -1,5 +1,11 @@
 #include "student.h"
 
+Student::Student()
+    : Student("---", "---", "---", QDate::currentDate(), QDate::currentDate(), QDate::currentDate())
+{
+
+}
+
 Student::Student(const QString &first, const QString &second, const QString &middle,
                  const QDate &birth, const QDate &enrollment, const QDate &graduation)
 {
@@ -61,7 +67,10 @@ QDate Student::getBirthDate() const
 
 void Student::setBirthDate(const QDate &value)
 {
-    birthDate = value;
+    if (!value.isValid() || value.isNull())
+        birthDate = QDate::currentDate();
+    else
+        birthDate = value;
 }
 
 QDate Student::getEnrollmentDate() const
@@ -71,7 +80,10 @@ QDate Student::getEnrollmentDate() const
 
 void Student::setEnrollmentDate(const QDate &value)
 {
-    enrollmentDate = value;
+    if (!value.isValid() || value.isNull())
+        enrollmentDate = QDate::currentDate();
+    else
+        enrollmentDate = value;
 }
 
 QDate Student::getGraduationDate() const
@@ -81,7 +93,10 @@ QDate Student::getGraduationDate() const
 
 void Student::setGraduationDate(const QDate &value)
 {
-    graduationDate = value;
+    if (!value.isValid() || value.isNull())
+        graduationDate = QDate::currentDate();
+    else
+        graduationDate = value;
 }
 
 bool Student::operator==(const_ref student) const
@@ -89,15 +104,18 @@ bool Student::operator==(const_ref student) const
     return (getFullName() == student.getFullName()) &&
            (getBirthDate() == student.getBirthDate()) &&
            (getEnrollmentDate() == student.getEnrollmentDate()) &&
-           (getGraduationDate() == student.getGraduationDate());
+            (getGraduationDate() == student.getGraduationDate());
+}
+
+bool Student::operator!=(Student::const_ref student) const
+{
+    return !(*this == student);
 }
 
 QString Student::capitalizeString(const QString &str)
 {
     QString capitalized = str;
     if (!str.isEmpty())
-    {
         capitalized[0] = capitalized[0].toUpper();
-    }
     return capitalized;
 }
