@@ -1,17 +1,34 @@
-#ifndef MULTIPAGETABLE_H
-#define MULTIPAGETABLE_H
+#pragma once
 
 #include <QObject>
+#include <QTableWidget>
+#include <QHeaderView>
+#include "../model/database.h"
 
-class MultipageTable : public QObject
+class MultipageTable : public QTableWidget
 {
     Q_OBJECT
 public:
-    explicit MultipageTable(QObject *parent = 0);
+    explicit MultipageTable(const StudentDatabase &db, QWidget *parent = 0);
 
-signals:
+    enum TableField { Name = 0, BirthDate, EnrollmentDate, GraduationDate };
+
+    void writeStudentInTable(const Student& student, int row);
+
+    int getMaxPageRows() const;
+    void setMaxPageRows(int value);
 
 public slots:
-};
+    void retrieveItems();
 
-#endif // MULTIPAGETABLE_H
+private:
+    void fitToContents();
+
+    QList<Student> students;
+
+    const StudentDatabase &database;
+
+    int maxPageRows;
+    const int DEFAULT_PAGE_ROW_COUNT = 5;
+    const int TOTAL_COLUMNS = 4;
+};

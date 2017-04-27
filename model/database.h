@@ -1,7 +1,9 @@
-#ifndef STUDENTDATABASE_H
-#define STUDENTDATABASE_H
+#pragma once
 
 #include <QObject>
+#include <QList>
+
+#include "student.h"
 
 class StudentDatabase : public QObject
 {
@@ -9,9 +11,23 @@ class StudentDatabase : public QObject
 public:
     explicit StudentDatabase(QObject *parent = 0);
 
+    QList<Student> getStudents() const;
+
+    void addStudent(Student student);
+    void removeStudent(Student::const_ref student);
+
+    bool contains(Student::const_ref student) const;
+    bool validateStudent(Student::const_ref student) const;
+
 signals:
+    void modelChanged();
+    void studentAdded(Student newStudent);
+    void studentDeleted(Student deletedStudent);
+    void duplicateInsertion();
+    void invalidInsertion();
 
-public slots:
+private:
+    QList<Student> students;
+
+    const int MIN_AGE = 18;
 };
-
-#endif // STUDENTDATABASE_H

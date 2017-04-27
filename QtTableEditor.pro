@@ -11,8 +11,19 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = QtTableEditor
 TEMPLATE = app
 
+CONFIG += c++11
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    model/student.cpp \
+    model/database.cpp \
+    manager/manager.cpp \
+    table/table.cpp \
+    dialogs/adddialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    model/student.h \
+    model/database.h \
+    manager/manager.h \
+    table/table.h \
+    dialogs/adddialog.h

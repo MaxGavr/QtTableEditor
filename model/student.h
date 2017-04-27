@@ -1,11 +1,43 @@
-#ifndef STUDENT_H
-#define STUDENT_H
+#pragma once
 
+#include <QString>
+#include <QDate>
 
 class Student
 {
 public:
-    Student();
-};
+    typedef const Student& const_ref;
 
-#endif // STUDENT_H
+    Student(const QString& first, const QString& second, const QString& middle,
+            const QDate& birth, const QDate& enrollment, const QDate& graduation);
+    Student(const_ref student);
+
+    QString getFirstName() const;
+    void setFirstName(const QString &value);
+    QString getSecondName() const;
+    void setSecondName(const QString &value);
+    QString getMiddleName() const;
+    void setMiddleName(const QString &value);
+
+    QString getFullName() const;
+
+    QDate getBirthDate() const;
+    void setBirthDate(const QDate &value);
+    QDate getEnrollmentDate() const;
+    void setEnrollmentDate(const QDate &value);
+    QDate getGraduationDate() const;
+    void setGraduationDate(const QDate &value);
+
+    bool operator== (const_ref student) const;
+
+private:
+    QString capitalizeString(const QString& str);
+
+    QString firstName;
+    QString secondName;
+    QString middleName;
+
+    QDate birthDate;
+    QDate enrollmentDate;
+    QDate graduationDate;
+};
