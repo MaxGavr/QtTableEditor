@@ -3,7 +3,8 @@
 MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
     : QTableWidget(parent), database(db)
 {
-    setMaxPageRows(DEFAULT_PAGE_ROW_COUNT);
+    setCurrentPage(0);
+    setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
     setColumnCount(TOTAL_COLUMNS);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -17,16 +18,19 @@ MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
     setHorizontalHeaderItem(3, fourthColumnTitle);
     fitToContents();
 
-    retrieveItems();
-    connect(&database, SIGNAL(modelChanged()), this, SLOT(retrieveItems()));
+    getPage();
+    connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
+    connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
 }
 
-void MultipageTable::retrieveItems()
+void MultipageTable::getPage()
 {
-    QList<Student> students = database.getStudents();
-    foreach (const Student& student, students)
+    clearTable();
+    StudentDatabase::StudentSet page = database.getSetOfStudents(getCurrentPage(),
+                                                                 getStudentsPerPage());
+    foreach (Student::const_ref student, page)
     {
-        writeStudentInTable(student, students.indexOf(student));
+        writeStudentInTable(student, page.indexOf(student));
     }
 }
 
@@ -36,14 +40,24 @@ void MultipageTable::fitToContents()
     horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
-int MultipageTable::getMaxPageRows() const
+int MultipageTable::getCurrentPage() const
 {
-    return maxPageRows;
+    return currentPage;
 }
 
-void MultipageTable::setMaxPageRows(int value)
+void MultipageTable::setCurrentPage(int value)
 {
-    maxPageRows = value;
+    currentPage = value;
+}
+
+int MultipageTable::getStudentsPerPage() const
+{
+    return studentsPerPage;
+}
+
+void MultipageTable::setStudentsPerPage(int value)
+{
+    studentsPerPage = value;
 }
 
 void MultipageTable::writeStudentInTable(const Student &student, int row)
@@ -62,4 +76,15 @@ void MultipageTable::writeStudentInTable(const Student &student, int row)
     setItem(row, GraduationDate, graduate);
 
     fitToContents();
+}
+
+void MultipageTable::clearTable()
+{
+    clearContents();
+    setRowCount(countStudents());
+}
+
+int MultipageTable::countStudents() const
+{
+    return students.count();
 }

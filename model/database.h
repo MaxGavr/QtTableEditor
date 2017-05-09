@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <QList>
+#include <QVector>
 
 #include "student.h"
 
@@ -9,25 +9,29 @@ class StudentDatabase : public QObject
 {
     Q_OBJECT
 public:
+    using StudentSet = QVector<Student>;
+
     explicit StudentDatabase(QObject *parent = 0);
 
-    QList<Student> getStudents() const;
+    Student getStudent(int index) const;
+    StudentSet getSetOfStudents(int index, int amount) const;
 
     void addStudent(Student student);
     void removeStudent(Student::const_ref student);
 
     bool contains(Student::const_ref student) const;
     bool validateStudent(Student::const_ref student) const;
+    bool validatePageBounds(int pageIndex, int studentsPerPage) const;
+
+    int countStudents() const;
+    int countPages(int studentsPerPage) const;
 
 signals:
-    void modelChanged();
-    void studentAdded(Student newStudent);
-    void studentDeleted(Student deletedStudent);
-    void duplicateInsertion();
-    void invalidInsertion();
+    void studentAdded();
+    void studentDeleted();
 
 private:
-    QList<Student> students;
+    StudentSet students;
 
     const int MIN_AGE = 18;
 };

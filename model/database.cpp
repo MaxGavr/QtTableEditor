@@ -1,36 +1,42 @@
 #include "database.h"
+#include <math.h>
 
 StudentDatabase::StudentDatabase(QObject *parent) : QObject(parent)
 {   
 }
 
-QList<Student> StudentDatabase::getStudents() const
+Student StudentDatabase::getStudent(int index) const
 {
-    return students;
+    Student student;
+    if (index < countStudents())
+        student = students.at(index);
+    return student;
+}
+
+StudentDatabase::StudentSet StudentDatabase::getSetOfStudents(int index, int amount) const
+{
+    if (!validatePageBounds(index, amount))
+        return StudentSet();
+
+    int initialPosition = index * amount;
+    return students.mid(initialPosition, amount);
 }
 
 void StudentDatabase::addStudent(Student student)
 {
-    if (!contains(student))
+    if (!contains(student) && validateStudent(student))
     {
-        if (validateStudent(student))
-        {
-            students.append(student);
-            emit modelChanged();
-        }
-        else
-            emit invalidInsertion();
+        students.append(student);
+        emit studentAdded();
     }
-    else
-        emit duplicateInsertion();
 }
 
 void StudentDatabase::removeStudent(Student::const_ref student)
 {
     if (contains(student))
     {
-        emit studentDeleted(student);
         students.removeOne(student);
+        emit studentDeleted();
     }
 }
 
@@ -61,6 +67,21 @@ bool StudentDatabase::validateStudent(Student::const_ref student) const
     }
 
     return isValid;
+}
+
+int StudentDatabase::countStudents() const
+{
+    return students.count();
+}
+
+int StudentDatabase::countPages(int studentsPerPage) const
+{
+    return ceil(countStudents() / (double)studentsPerPage);
+}
+
+bool StudentDatabase::validatePageBounds(int pageIndex, int studentsPerPage) const
+{
+    return pageIndex < countPages(studentsPerPage);
 }
 
 

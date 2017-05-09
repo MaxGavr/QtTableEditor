@@ -14,21 +14,28 @@ public:
     enum TableField { Name = 0, BirthDate, EnrollmentDate, GraduationDate };
 
     void writeStudentInTable(const Student& student, int row);
+    void clearTable();
 
-    int getMaxPageRows() const;
-    void setMaxPageRows(int value);
+    int countStudents() const;
+
+    int getStudentsPerPage() const;
+    void setStudentsPerPage(int value);
+
+    int getCurrentPage() const;
+    void setCurrentPage(int value);
 
 public slots:
-    void retrieveItems();
+    void getPage();
 
 private:
     void fitToContents();
 
-    QList<Student> students;
+    StudentDatabase::StudentSet students;
 
     const StudentDatabase &database;
 
-    int maxPageRows;
-    const int DEFAULT_PAGE_ROW_COUNT = 5;
+    int currentPage;
+    int studentsPerPage;
+    const int DEFAULT_STUDENTS_PER_PAGE = 5;
     const int TOTAL_COLUMNS = 4;
 };
