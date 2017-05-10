@@ -2,14 +2,20 @@
 
 #include <QObject>
 #include <QVector>
+#include <QXmlStreamReader>
+#include <QFile>
 
 #include "student.h"
+#include "xmlhandler.h"
 
 class StudentDatabase : public QObject
 {
     Q_OBJECT
 public:
     using StudentSet = QVector<Student>;
+
+    enum class XmlTags {STUDENT, NAME, SURNAME, MIDDLE_NAME,
+                        BIRTH_DATE, ENROLL_DATE, GRADUATE_DATE};
 
     explicit StudentDatabase(QObject *parent = 0);
 
@@ -32,6 +38,8 @@ signals:
 
 private:
     StudentSet students;
+
+    XmlHandler xml;
 
     const int MIN_AGE = 18;
 };

@@ -19,11 +19,13 @@ SOURCES += main.cpp\
     model/database.cpp \
     manager/manager.cpp \
     table/table.cpp \
-    dialogs/adddialog.cpp
+    dialogs/adddialog.cpp \
+    model/xmlhandler.cpp
 
 HEADERS  += mainwindow.h \
     model/student.h \
     model/database.h \
     manager/manager.h \
     table/table.h \
-    dialogs/adddialog.h
+    dialogs/adddialog.h \
+    model/xmlhandler.h

@@ -1,8 +1,9 @@
 #include "database.h"
 #include <math.h>
 
-StudentDatabase::StudentDatabase(QObject *parent) : QObject(parent)
-{   
+StudentDatabase::StudentDatabase(QObject *parent)
+    : QObject(parent), xml(this)
+{
 }
 
 Student StudentDatabase::getStudent(int index) const
