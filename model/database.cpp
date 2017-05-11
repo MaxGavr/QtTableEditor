@@ -80,6 +80,11 @@ int StudentDatabase::countPages(int studentsPerPage) const
     return ceil(countStudents() / (double)studentsPerPage);
 }
 
+XmlHandler *StudentDatabase::getXmlHandler()
+{
+    return &xml;
+}
+
 bool StudentDatabase::validatePageBounds(int pageIndex, int studentsPerPage) const
 {
     return pageIndex < countPages(studentsPerPage);

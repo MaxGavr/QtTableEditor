@@ -14,9 +14,6 @@ class StudentDatabase : public QObject
 public:
     using StudentSet = QVector<Student>;
 
-    enum class XmlTags {STUDENT, NAME, SURNAME, MIDDLE_NAME,
-                        BIRTH_DATE, ENROLL_DATE, GRADUATE_DATE};
-
     explicit StudentDatabase(QObject *parent = 0);
 
     Student getStudent(int index) const;
@@ -31,6 +28,8 @@ public:
 
     int countStudents() const;
     int countPages(int studentsPerPage) const;
+
+    XmlHandler *getXmlHandler();
 
 signals:
     void studentAdded();
