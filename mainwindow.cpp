@@ -1,4 +1,6 @@
 #include "mainwindow.h"
+#include "QMessageBox"
+#include "QFileDialog"
 
 MainWindow::MainWindow(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent)
     : QMainWindow(parent), database(db)
@@ -21,6 +23,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::createActions()
 {
+    openFileAction = new QAction(tr("Открыть файл"), this);
+    openFileAction->setShortcut(QKeySequence::Open);
+    openFileAction->setStatusTip(tr("Открыть файл с таблицей студентов"));
+    connect(openFileAction, SIGNAL(triggered(bool)), this, SLOT(openFileDialog()));
+
     addStudentAction = new QAction(tr("Добавить запись"), this);
     addStudentAction->setShortcut(Qt::Key_1);
     addStudentAction->setStatusTip(tr("Добавить в таблицу новую запись с информацией о студенте"));
@@ -34,6 +41,7 @@ void MainWindow::createActions()
 void MainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("Файл"));
+    fileMenu->addAction(openFileAction);
 
     editMenu = menuBar()->addMenu(tr("Редактировать"));
     editMenu->addAction(addStudentAction);
@@ -44,11 +52,39 @@ void MainWindow::createMenus()
 
 void MainWindow::createToolBars()
 {
+    fileToolBar = new QToolBar(tr("Работа с файлом"));
+    fileToolBar->addAction(openFileAction);
+    addToolBar(fileToolBar);
+
     editToolBar = new QToolBar(tr("Редактировать"));
     editToolBar->addAction(addStudentAction);
-    addToolBar(editToolBar);
+    addToolBar(Qt::LeftToolBarArea, editToolBar);
 }
 
+bool MainWindow::saveConfirmation()
+{
+    int respond = QMessageBox::warning(this, tr("Сохранить файл"),
+                                       tr("Вы хотите сохранить изменения?"),
+                                       QMessageBox::Yes | QMessageBox::No |
+                                       QMessageBox::Cancel);
+    if (respond == QMessageBox::Yes)
+        return true;
+    else if (respond == QMessageBox::Cancel)
+        return false;
+    return true;
+}
+
+void MainWindow::openFileDialog()
+{
+    if (saveConfirmation())
+    {
+        QString openFile = QFileDialog::getOpenFileName(this, tr("Открыть файл"),
+                                                        QString(),
+                                                        "Student table (*.xml)");
+        getManager()->loadDatabaseFromFile(openFile);
+        currentFile = openFile;
+    }
+}
 
 DatabaseManager *MainWindow::getManager() const
 {

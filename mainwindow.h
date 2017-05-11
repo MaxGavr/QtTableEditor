@@ -26,9 +26,12 @@ public:
     void createToolBars();
 
 public slots:
+    void openFileDialog();
     void showAddDialog();
 
 private:
+    bool saveConfirmation();
+
     MultipageTable *table;
 
     DatabaseManager *manager;
@@ -37,7 +40,11 @@ private:
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *helpMenu;
+    QToolBar *fileToolBar;
     QToolBar *editToolBar;
+
+    QString currentFile;
+    QAction *openFileAction;
 
     QAction *addStudentAction;
     QAction *aboutQtAction;
