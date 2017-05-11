@@ -1,22 +1,17 @@
 #include "table.h"
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
-    : QTableWidget(parent), database(db)
+    : QWidget(parent), database(db)
 {
+    initTable();
+
     setCurrentPage(0);
     setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
-    setColumnCount(TOTAL_COLUMNS);
-    setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    QTableWidgetItem *firstColumnTitle = new QTableWidgetItem(tr("ФИО"));
-    QTableWidgetItem *secondColumnTitle = new QTableWidgetItem(tr("Дата рождения"));
-    QTableWidgetItem *thirdColumnTitle = new QTableWidgetItem(tr("Дата поступления"));
-    QTableWidgetItem *fourthColumnTitle = new QTableWidgetItem(tr("Дата окончания"));
-    setHorizontalHeaderItem(0, firstColumnTitle);
-    setHorizontalHeaderItem(1, secondColumnTitle);
-    setHorizontalHeaderItem(2, thirdColumnTitle);
-    setHorizontalHeaderItem(3, fourthColumnTitle);
-    fitToContents();
+    createPageControl();
+    manageLayouts();
 
     getPage();
     connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
@@ -34,10 +29,56 @@ void MultipageTable::getPage()
     }
 }
 
-void MultipageTable::fitToContents()
+void MultipageTable::initTable()
 {
-    resizeColumnsToContents();
-    horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    table = new QTableWidget(this);
+
+    table->setColumnCount(TOTAL_COLUMNS);
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    QTableWidgetItem *firstColumnTitle = new QTableWidgetItem(tr("ФИО"));
+    QTableWidgetItem *secondColumnTitle = new QTableWidgetItem(tr("Дата рождения"));
+    QTableWidgetItem *thirdColumnTitle = new QTableWidgetItem(tr("Дата поступления"));
+    QTableWidgetItem *fourthColumnTitle = new QTableWidgetItem(tr("Дата окончания"));
+    table->setHorizontalHeaderItem(0, firstColumnTitle);
+    table->setHorizontalHeaderItem(1, secondColumnTitle);
+    table->setHorizontalHeaderItem(2, thirdColumnTitle);
+    table->setHorizontalHeaderItem(3, fourthColumnTitle);
+
+    fitTableToContents();
+}
+
+void MultipageTable::manageLayouts()
+{
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    buttonLayout->addWidget(firstPageButton);
+    buttonLayout->addWidget(prevPageButton);
+    buttonLayout->addWidget(pageSizeInput);
+    buttonLayout->addWidget(currentPageLabel);
+    buttonLayout->addWidget(nextPageButton);
+    buttonLayout->addWidget(lastPageButton);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout();
+    mainLayout->addWidget(table);
+    mainLayout->addLayout(buttonLayout);
+    setLayout(mainLayout);
+}
+
+void MultipageTable::createPageControl()
+{
+    nextPageButton = new QPushButton(tr("->"), this);
+    prevPageButton = new QPushButton(tr("<-"), this);
+    lastPageButton = new QPushButton(tr("-->"), this);
+    firstPageButton = new QPushButton(tr("<--"), this);
+
+    pageSizeInput = new QLineEdit(tr("Кол-во записей:"), this);
+    currentPageLabel = new QLabel(tr("/"), this);
+}
+
+void MultipageTable::fitTableToContents()
+{
+    table->resizeColumnsToContents();
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 int MultipageTable::getCurrentPage() const
@@ -60,28 +101,28 @@ void MultipageTable::setStudentsPerPage(int value)
     studentsPerPage = value;
 }
 
-void MultipageTable::writeStudentInTable(const Student &student, int row)
+void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
 {
-    if (rowCount() <= row)
-        insertRow(row);
+    if (table->rowCount() <= row)
+        table->insertRow(row);
 
     QTableWidgetItem *name = new QTableWidgetItem(student.getFullName());
     QTableWidgetItem *birth = new QTableWidgetItem(student.getBirthDate().toString(Qt::ISODate));
     QTableWidgetItem *enroll = new QTableWidgetItem(student.getEnrollmentDate().toString(Qt::ISODate));
     QTableWidgetItem *graduate = new QTableWidgetItem(student.getGraduationDate().toString(Qt::ISODate));
 
-    setItem(row, Name, name);
-    setItem(row, BirthDate, birth);
-    setItem(row, EnrollmentDate, enroll);
-    setItem(row, GraduationDate, graduate);
+    table->setItem(row, Name, name);
+    table->setItem(row, BirthDate, birth);
+    table->setItem(row, EnrollmentDate, enroll);
+    table->setItem(row, GraduationDate, graduate);
 
-    fitToContents();
+    fitTableToContents();
 }
 
 void MultipageTable::clearTable()
 {
-    clearContents();
-    setRowCount(countStudents());
+    table->clearContents();
+    table->setRowCount(countStudents());
 }
 
 int MultipageTable::countStudents() const

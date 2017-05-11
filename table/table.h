@@ -2,18 +2,21 @@
 
 #include <QObject>
 #include <QTableWidget>
+#include <QPushButton>
 #include <QHeaderView>
+#include <QLineEdit>
+#include <QLabel>
 #include "../model/database.h"
 
-class MultipageTable : public QTableWidget
+class MultipageTable : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MultipageTable(const StudentDatabase &db, QWidget *parent = 0);
+    MultipageTable(const StudentDatabase &db, QWidget *parent = 0);
 
     enum TableField { Name = 0, BirthDate, EnrollmentDate, GraduationDate };
 
-    void writeStudentInTable(const Student& student, int row);
+    void writeStudentInTable(Student::const_ref student, int row);
     void clearTable();
 
     int countStudents() const;
@@ -28,7 +31,18 @@ public slots:
     void getPage();
 
 private:
-    void fitToContents();
+    void initTable();
+    void manageLayouts();
+    void createPageControl();
+    void fitTableToContents();
+
+    QTableWidget *table;
+    QPushButton *nextPageButton;
+    QPushButton *prevPageButton;
+    QPushButton *lastPageButton;
+    QPushButton *firstPageButton;
+    QLineEdit *pageSizeInput;
+    QLabel *currentPageLabel;
 
     StudentDatabase::StudentSet students;
 
