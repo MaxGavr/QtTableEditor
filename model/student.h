@@ -23,10 +23,13 @@ public:
     QString getFullName() const;
 
     QDate getBirthDate() const;
+    QString getBirthDateString() const;
     void setBirthDate(const QDate &value);
     QDate getEnrollmentDate() const;
+    QString getEnrollmentDateString() const;
     void setEnrollmentDate(const QDate &value);
     QDate getGraduationDate() const;
+    QString getGraduationDateString() const;
     void setGraduationDate(const QDate &value);
 
     bool operator== (const_ref student) const;
@@ -42,4 +45,6 @@ private:
     QDate birthDate;
     QDate enrollmentDate;
     QDate graduationDate;
+
+    static const QString DATE_FORMAT;
 };

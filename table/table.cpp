@@ -117,9 +117,9 @@ void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
         table->insertRow(row);
 
     QTableWidgetItem *name = new QTableWidgetItem(student.getFullName());
-    QTableWidgetItem *birth = new QTableWidgetItem(student.getBirthDate().toString(Qt::ISODate));
-    QTableWidgetItem *enroll = new QTableWidgetItem(student.getEnrollmentDate().toString(Qt::ISODate));
-    QTableWidgetItem *graduate = new QTableWidgetItem(student.getGraduationDate().toString(Qt::ISODate));
+    QTableWidgetItem *birth = new QTableWidgetItem(student.getBirthDateString());
+    QTableWidgetItem *enroll = new QTableWidgetItem(student.getEnrollmentDateString());
+    QTableWidgetItem *graduate = new QTableWidgetItem(student.getGraduationDateString());
 
     table->setItem(row, Name, name);
     table->setItem(row, BirthDate, birth);

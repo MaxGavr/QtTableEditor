@@ -1,5 +1,7 @@
 #include "student.h"
 
+const QString Student::DATE_FORMAT = "dd.MM.yyyy";
+
 Student::Student()
     : Student("---", "---", "---", QDate::currentDate(), QDate::currentDate(), QDate::currentDate())
 {
@@ -65,6 +67,11 @@ QDate Student::getBirthDate() const
     return birthDate;
 }
 
+QString Student::getBirthDateString() const
+{
+    return getBirthDate().toString(DATE_FORMAT);
+}
+
 void Student::setBirthDate(const QDate &value)
 {
     if (!value.isValid() || value.isNull())
@@ -78,6 +85,11 @@ QDate Student::getEnrollmentDate() const
     return enrollmentDate;
 }
 
+QString Student::getEnrollmentDateString() const
+{
+    return getEnrollmentDate().toString(DATE_FORMAT);
+}
+
 void Student::setEnrollmentDate(const QDate &value)
 {
     if (!value.isValid() || value.isNull())
@@ -89,6 +101,11 @@ void Student::setEnrollmentDate(const QDate &value)
 QDate Student::getGraduationDate() const
 {
     return graduationDate;
+}
+
+QString Student::getGraduationDateString() const
+{
+    return getGraduationDate().toString(DATE_FORMAT);
 }
 
 void Student::setGraduationDate(const QDate &value)
