@@ -10,9 +10,14 @@ void DatabaseManager::setDatabase(StudentDatabase *value)
     database = value;
 }
 
-void DatabaseManager::loadDatabaseFromFile(const QString &fileName)
+bool DatabaseManager::saveDatabaseToFile(const QString &fileName)
 {
-    database->getXmlHandler()->readFromFile(fileName);
+    return database->getXmlHandler()->writeToFile(fileName);
+}
+
+bool DatabaseManager::loadDatabaseFromFile(const QString &fileName)
+{
+    return database->getXmlHandler()->readFromFile(fileName);
 }
 
 void DatabaseManager::addStudent(const QString &first, const QString &second, const QString &middle,

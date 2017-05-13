@@ -9,7 +9,8 @@ public:
 
     void setDatabase(StudentDatabase *value);
 
-    void loadDatabaseFromFile(const QString &fileName);
+    bool loadDatabaseFromFile(const QString &fileName);
+    bool saveDatabaseToFile(const QString &fileName);
 
     void addStudent(const QString &first, const QString &second, const QString &middle,
                     const QDate &birth, const QDate &enrollment, const QDate &graduation);

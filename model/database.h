@@ -12,6 +12,8 @@ class StudentDatabase : public QObject
 {
     Q_OBJECT
 public:
+    friend class XmlHandler;
+
     using StudentSet = QVector<Student>;
 
     explicit StudentDatabase(QObject *parent = 0);
