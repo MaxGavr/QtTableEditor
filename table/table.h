@@ -20,6 +20,7 @@ public:
     void clearTable();
 
     int countStudents() const;
+    int maxPages() const;
 
     int getStudentsPerPage() const;
     void setStudentsPerPage(int value);
@@ -29,12 +30,15 @@ public:
 
 public slots:
     void getPage();
+    void updatePageLabel();
 
 private:
     void initTable();
-    void manageLayouts();
-    void createPageControl();
     void fitTableToContents();
+
+    void manageLayouts();
+
+    void createPageControl();
 
     QTableWidget *table;
     QPushButton *nextPageButton;

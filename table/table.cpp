@@ -7,15 +7,18 @@ MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
 {
     initTable();
 
-    setCurrentPage(0);
-    setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
-
     createPageControl();
     manageLayouts();
+
+    setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
+    setCurrentPage(0);
 
     getPage();
     connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
     connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
+
+    connect(&database, SIGNAL(studentAdded()), this, SLOT(updatePageLabel()));
+    connect(&database, SIGNAL(studentDeleted()), this, SLOT(updatePageLabel()));
 }
 
 void MultipageTable::getPage()
@@ -75,6 +78,12 @@ void MultipageTable::createPageControl()
     currentPageLabel = new QLabel(tr("/"), this);
 }
 
+void MultipageTable::updatePageLabel()
+{
+    QString text = QString::number(getCurrentPage()) + "/" + QString::number(maxPages());
+    currentPageLabel->setText(text);
+}
+
 void MultipageTable::fitTableToContents()
 {
     table->resizeColumnsToContents();
@@ -89,6 +98,7 @@ int MultipageTable::getCurrentPage() const
 void MultipageTable::setCurrentPage(int value)
 {
     currentPage = value;
+    updatePageLabel();
 }
 
 int MultipageTable::getStudentsPerPage() const
@@ -128,4 +138,9 @@ void MultipageTable::clearTable()
 int MultipageTable::countStudents() const
 {
     return students.count();
+}
+
+int MultipageTable::maxPages() const
+{
+    return database.countPages(studentsPerPage);
 }
