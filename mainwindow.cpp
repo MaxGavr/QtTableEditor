@@ -26,7 +26,17 @@ void MainWindow::createActions()
     openFileAction = new QAction(tr("Открыть файл"), this);
     openFileAction->setShortcut(QKeySequence::Open);
     openFileAction->setStatusTip(tr("Открыть файл с таблицей студентов"));
-    connect(openFileAction, SIGNAL(triggered(bool)), this, SLOT(openFileDialog()));
+    connect(openFileAction, SIGNAL(triggered(bool)), this, SLOT(openFile()));
+
+    saveFileAction = new QAction(tr("Сохранить файл"), this);
+    saveFileAction->setShortcut(QKeySequence::Save);
+    saveFileAction->setStatusTip(tr("Сохранить текущую таблицу студентов"));
+    connect(saveFileAction, SIGNAL(triggered(bool)), this, SLOT(saveFile()));
+
+    saveAsAction = new QAction(tr("Сохранить как ..."), this);
+    saveAsAction->setShortcut(QKeySequence::SaveAs);
+    saveAsAction->setStatusTip(tr("Сохранить текущую таблицу студентов в новый файл"));
+    connect(saveAsAction, SIGNAL(triggered(bool)), this, SLOT(saveFileAs()));
 
     addStudentAction = new QAction(tr("Добавить запись"), this);
     addStudentAction->setShortcut(Qt::Key_1);
@@ -42,6 +52,8 @@ void MainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(tr("Файл"));
     fileMenu->addAction(openFileAction);
+    fileMenu->addAction(saveFileAction);
+    fileMenu->addAction(saveAsAction);
 
     editMenu = menuBar()->addMenu(tr("Редактировать"));
     editMenu->addAction(addStudentAction);
@@ -54,6 +66,8 @@ void MainWindow::createToolBars()
 {
     fileToolBar = new QToolBar(tr("Работа с файлом"));
     fileToolBar->addAction(openFileAction);
+    fileToolBar->addAction(saveFileAction);
+    fileToolBar->addAction(saveAsAction);
     addToolBar(fileToolBar);
 
     editToolBar = new QToolBar(tr("Редактировать"));
@@ -68,13 +82,13 @@ bool MainWindow::saveConfirmation()
                                        QMessageBox::Yes | QMessageBox::No |
                                        QMessageBox::Cancel);
     if (respond == QMessageBox::Yes)
-        return true;
+        return saveFile();
     else if (respond == QMessageBox::Cancel)
         return false;
     return true;
 }
 
-void MainWindow::openFileDialog()
+void MainWindow::openFile()
 {
     if (saveConfirmation())
     {
@@ -84,6 +98,27 @@ void MainWindow::openFileDialog()
         getManager()->loadDatabaseFromFile(openFile);
         currentFile = openFile;
     }
+}
+
+bool MainWindow::saveFile()
+{
+    if (currentFile.isEmpty())
+        return saveFileAs();
+    else
+        return getManager()->saveDatabaseToFile(currentFile);
+}
+
+bool MainWindow::saveFileAs()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить файл"),
+                                                    "new_table.xml", "Student table (*.xml)");
+    if (!fileName.isEmpty())
+    {
+        currentFile = fileName;
+        return getManager()->saveDatabaseToFile(currentFile);
+    }
+    else
+        return false;
 }
 
 DatabaseManager *MainWindow::getManager() const

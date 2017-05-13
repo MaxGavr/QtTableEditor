@@ -26,7 +26,9 @@ public:
     void createToolBars();
 
 public slots:
-    void openFileDialog();
+    void openFile();
+    bool saveFile();
+    bool saveFileAs();
     void showAddDialog();
 
 private:
@@ -45,6 +47,8 @@ private:
 
     QString currentFile;
     QAction *openFileAction;
+    QAction *saveFileAction;
+    QAction *saveAsAction;
 
     QAction *addStudentAction;
     QAction *aboutQtAction;
