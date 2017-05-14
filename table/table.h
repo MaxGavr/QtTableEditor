@@ -19,6 +19,7 @@ public:
     void writeStudentInTable(Student::const_ref student, int row);
     void clearTable();
 
+    bool isEmpty() const;
     int countStudents() const;
     int maxPages() const;
 
@@ -31,6 +32,12 @@ public:
 public slots:
     void getPage();
     void updatePageLabel();
+    void updateStudentsPerPage();
+
+    void goToFirstPage();
+    void goToLastPage();
+    void goToPreviousPage();
+    void goToNextPage();
 
 private:
     void initTable();
@@ -54,6 +61,7 @@ private:
 
     int currentPage;
     int studentsPerPage;
-    const int DEFAULT_STUDENTS_PER_PAGE = 5;
+    const int DEFAULT_STUDENTS_PER_PAGE = 10;
     const int TOTAL_COLUMNS = 4;
+    const int STARTING_PAGE = 0;
 };

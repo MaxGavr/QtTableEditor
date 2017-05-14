@@ -11,7 +11,7 @@ MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
     manageLayouts();
 
     setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
-    setCurrentPage(0);
+    setCurrentPage(STARTING_PAGE);
 
     getPage();
     connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
@@ -54,12 +54,13 @@ void MultipageTable::initTable()
 void MultipageTable::manageLayouts()
 {
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    buttonLayout->addWidget(firstPageButton);
-    buttonLayout->addWidget(prevPageButton);
-    buttonLayout->addWidget(pageSizeInput);
-    buttonLayout->addWidget(currentPageLabel);
-    buttonLayout->addWidget(nextPageButton);
-    buttonLayout->addWidget(lastPageButton);
+    buttonLayout->addStretch(12);
+    buttonLayout->addWidget(firstPageButton, 1);
+    buttonLayout->addWidget(prevPageButton, 1);
+    buttonLayout->addWidget(pageSizeInput, 1);
+    buttonLayout->addWidget(currentPageLabel, 1);
+    buttonLayout->addWidget(nextPageButton, 1);
+    buttonLayout->addWidget(lastPageButton, 1);
 
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->addWidget(table);
@@ -70,18 +71,62 @@ void MultipageTable::manageLayouts()
 void MultipageTable::createPageControl()
 {
     nextPageButton = new QPushButton(tr("->"), this);
+    connect(nextPageButton, SIGNAL(clicked(bool)), this, SLOT(goToNextPage()));
     prevPageButton = new QPushButton(tr("<-"), this);
+    connect(prevPageButton, SIGNAL(clicked(bool)), this, SLOT(goToPreviousPage()));
     lastPageButton = new QPushButton(tr("-->"), this);
+    connect(lastPageButton, SIGNAL(clicked(bool)), this, SLOT(goToLastPage()));
     firstPageButton = new QPushButton(tr("<--"), this);
+    connect(firstPageButton, SIGNAL(clicked(bool)), this, SLOT(goToFirstPage()));
 
     pageSizeInput = new QLineEdit(tr("Кол-во записей:"), this);
+    QFont font = QFont();
+    font.setBold(true);
+    pageSizeInput->setFont(font);
+    pageSizeInput->setAlignment(Qt::AlignCenter);
+    pageSizeInput->setValidator(new QIntValidator(1, 100));
+    connect(pageSizeInput, SIGNAL(editingFinished()), this, SLOT(updateStudentsPerPage()));
     currentPageLabel = new QLabel(tr("/"), this);
+    currentPageLabel->setFont(font);
+    currentPageLabel->setAlignment(Qt::AlignCenter);
 }
 
 void MultipageTable::updatePageLabel()
 {
-    QString text = QString::number(getCurrentPage()) + "/" + QString::number(maxPages());
-    currentPageLabel->setText(text);
+    if (!isEmpty())
+    {
+        QString text = QString::number(getCurrentPage() + 1) + "/" + QString::number(maxPages());
+        currentPageLabel->setText(text);
+    }
+    else
+        currentPageLabel->setText("/");
+}
+
+void MultipageTable::updateStudentsPerPage()
+{
+    setStudentsPerPage(pageSizeInput->text().toInt());
+}
+
+void MultipageTable::goToFirstPage()
+{
+    setCurrentPage(0);
+}
+
+void MultipageTable::goToLastPage()
+{
+    setCurrentPage(maxPages() - 1);
+}
+
+void MultipageTable::goToPreviousPage()
+{
+    if (getCurrentPage() - 1 >= 0)
+        setCurrentPage(getCurrentPage() - 1);
+}
+
+void MultipageTable::goToNextPage()
+{
+    if (getCurrentPage() + 1 < maxPages())
+        setCurrentPage(getCurrentPage() + 1);
 }
 
 void MultipageTable::fitTableToContents()
@@ -97,7 +142,11 @@ int MultipageTable::getCurrentPage() const
 
 void MultipageTable::setCurrentPage(int value)
 {
-    currentPage = value;
+    if (database.validatePageBounds(value, getStudentsPerPage()))
+    {
+        currentPage = value;
+        getPage();
+    }
     updatePageLabel();
 }
 
@@ -109,6 +158,8 @@ int MultipageTable::getStudentsPerPage() const
 void MultipageTable::setStudentsPerPage(int value)
 {
     studentsPerPage = value;
+    pageSizeInput->setText(QString::number(getStudentsPerPage()));
+    setCurrentPage(STARTING_PAGE);
 }
 
 void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
@@ -133,6 +184,11 @@ void MultipageTable::clearTable()
 {
     table->clearContents();
     table->setRowCount(countStudents());
+}
+
+bool MultipageTable::isEmpty() const
+{
+    return countStudents() == 0;
 }
 
 int MultipageTable::countStudents() const
