@@ -38,6 +38,8 @@ signals:
     void studentDeleted();
 
 private:
+    void clear();
+
     StudentSet students;
 
     XmlHandler xml;

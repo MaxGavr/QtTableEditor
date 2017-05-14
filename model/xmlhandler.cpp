@@ -26,6 +26,8 @@ bool XmlHandler::readFromFile(const QString &fileName)
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
+    database->clear();
+
     QXmlStreamReader stream(&file);
 
     Student student;

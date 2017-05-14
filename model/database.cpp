@@ -85,6 +85,13 @@ XmlHandler *StudentDatabase::getXmlHandler()
     return &xml;
 }
 
+void StudentDatabase::clear()
+{
+    foreach (Student::const_ref student, students) {
+        removeStudent(student);
+    }
+}
+
 bool StudentDatabase::validatePageBounds(int pageIndex, int studentsPerPage) const
 {
     return pageIndex < countPages(studentsPerPage);
