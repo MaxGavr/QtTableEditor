@@ -7,6 +7,7 @@ class DatabaseManager
 public:
     DatabaseManager(StudentDatabase *database);
 
+    const StudentDatabase &getDatabase() const;
     void setDatabase(StudentDatabase *value);
 
     bool loadDatabaseFromFile(const QString &fileName);

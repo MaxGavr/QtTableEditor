@@ -9,6 +9,7 @@
 #include "manager/manager.h"
 #include "table/table.h"
 #include "dialogs/adddialog.h"
+#include "dialogs/searchdialog.h"
 
 class MainWindow : public QMainWindow
 {
@@ -30,6 +31,7 @@ public slots:
     bool saveFile();
     bool saveFileAs();
     void showAddDialog();
+    void showSearchDialog();
 
 private:
     bool saveConfirmation();
@@ -51,5 +53,6 @@ private:
     QAction *saveAsAction;
 
     QAction *addStudentAction;
+    QAction *findStudentAction;
     QAction *aboutQtAction;
 };

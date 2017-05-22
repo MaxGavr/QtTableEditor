@@ -25,3 +25,11 @@ void DatabaseManager::addStudent(const QString &first, const QString &second, co
 {
     database->addStudent(Student(first, second, middle, birth, enrollment, graduation));
 }
+
+const StudentDatabase &DatabaseManager::getDatabase() const
+{
+    if (database)
+        return *database;
+    else
+        throw std::logic_error("Controller exception: database wasn't set!");
+}

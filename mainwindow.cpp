@@ -43,6 +43,11 @@ void MainWindow::createActions()
     addStudentAction->setStatusTip(tr("Добавить в таблицу новую запись с информацией о студенте"));
     connect(addStudentAction, SIGNAL(triggered(bool)), this, SLOT(showAddDialog()));
 
+    findStudentAction = new QAction(tr("Найти записи"), this);
+    findStudentAction->setShortcut(Qt::Key_2);
+    findStudentAction->setStatusTip(tr("Найти записи о студентах по заданным критериям"));
+    connect(findStudentAction, SIGNAL(triggered(bool)), this, SLOT(showSearchDialog()));
+
     aboutQtAction = new QAction(tr("О Qt"), this);
     aboutQtAction->setStatusTip(tr("Показать справочную информацию о библиотеке Qt"));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -57,6 +62,7 @@ void MainWindow::createMenus()
 
     editMenu = menuBar()->addMenu(tr("Редактировать"));
     editMenu->addAction(addStudentAction);
+    editMenu->addAction(findStudentAction);
 
     helpMenu = menuBar()->addMenu(tr("Справка"));
     helpMenu->addAction(aboutQtAction);
@@ -72,6 +78,7 @@ void MainWindow::createToolBars()
 
     editToolBar = new QToolBar(tr("Редактировать"));
     editToolBar->addAction(addStudentAction);
+    editToolBar->addAction(findStudentAction);
     addToolBar(Qt::LeftToolBarArea, editToolBar);
 }
 
@@ -134,5 +141,11 @@ void MainWindow::setManager(DatabaseManager *value)
 void MainWindow::showAddDialog()
 {
     AddStudentDialog dialog(getManager(), this);
+    dialog.exec();
+}
+
+void MainWindow::showSearchDialog()
+{
+    SearchStudentDialog dialog(getManager(), this);
     dialog.exec();
 }

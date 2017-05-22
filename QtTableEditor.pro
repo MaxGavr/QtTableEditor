@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     manager/manager.cpp \
     table/table.cpp \
     dialogs/adddialog.cpp \
-    model/xmlhandler.cpp
+    model/xmlhandler.cpp \
+    dialogs/searchdialog.cpp
 
 HEADERS  += mainwindow.h \
     model/student.h \
@@ -28,4 +29,5 @@ HEADERS  += mainwindow.h \
     manager/manager.h \
     table/table.h \
     dialogs/adddialog.h \
-    model/xmlhandler.h
+    model/xmlhandler.h \
+    dialogs/searchdialog.h
