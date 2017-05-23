@@ -27,6 +27,33 @@ Student::Student(Student::const_ref student)
 
 }
 
+QString Student::getByKey(KEYS key) const
+{
+    QString result;
+    switch (key)
+    {
+    case KEYS::FIRST_NAME:
+        result = getFirstName();
+        break;
+    case KEYS::SECOND_NAME:
+        result = getSecondName();
+        break;
+    case KEYS::MIDDLE_NAME:
+        result = getMiddleName();
+        break;
+    case KEYS::BIRTH_DATE:
+        result = getBirthDateString();
+        break;
+    case KEYS::ENROLL_DATE:
+        result = getEnrollmentDateString();
+        break;
+    case KEYS::GRADUATE_DATE:
+        result = getGraduationDateString();
+        break;
+    }
+    return result;
+}
+
 QString Student::getFirstName() const
 {
     return firstName;

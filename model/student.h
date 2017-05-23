@@ -2,16 +2,24 @@
 
 #include <QString>
 #include <QDate>
+#include <QVariant>
 
 class Student
 {
 public:
     typedef const Student& const_ref;
 
+    enum KEYS {FIRST_NAME = 0, SECOND_NAME, MIDDLE_NAME,
+               BIRTH_DATE, ENROLL_DATE, GRADUATE_DATE};
+
+    static const QString DATE_FORMAT;
+
     Student();
     Student(const QString& first, const QString& second, const QString& middle,
             const QDate& birth, const QDate& enrollment, const QDate& graduation);
     Student(const_ref student);
+
+    QString getByKey(KEYS key) const;
 
     QString getFirstName() const;
     void setFirstName(const QString &value);
@@ -45,6 +53,4 @@ private:
     QDate birthDate;
     QDate enrollmentDate;
     QDate graduationDate;
-
-    static const QString DATE_FORMAT;
 };
