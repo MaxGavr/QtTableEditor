@@ -14,7 +14,7 @@ TEMPLATE = app
 CONFIG += c++11
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     model/student.cpp \
     model/database.cpp \
     manager/manager.cpp \
@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     dialogs/adddialog.cpp \
     model/xmlhandler.cpp \
     dialogs/searchdialog.cpp \
-    model/searchpattern.cpp
+    model/searchpattern.cpp \
+    dialogs/searchwidget.cpp
 
 HEADERS  += mainwindow.h \
     model/student.h \
@@ -32,4 +33,5 @@ HEADERS  += mainwindow.h \
     dialogs/adddialog.h \
     model/xmlhandler.h \
     dialogs/searchdialog.h \
-    model/searchpattern.h
+    model/searchpattern.h \
+    dialogs/searchwidget.h
