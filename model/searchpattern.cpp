@@ -1,4 +1,7 @@
 #include "searchpattern.h"
+#include <algorithm>
+
+const int StudentSearchPattern::NUMBER_OF_CRITERIA = 6;
 
 StudentSearchPattern::StudentSearchPattern()
 {
@@ -17,24 +20,53 @@ StudentSearchPattern::StudentSearchPattern()
 
     comparators[Student::KEYS::BIRTH_DATE] = [this](QString dateString){
         QDate date = QDate::fromString(dateString, Student::DATE_FORMAT);
-        return (date >= birthDateLowerBound) && (date <= birthDateHigherBound);
+        return (date >= this->birthDateLowerBound) && (date <= this->birthDateHigherBound);
     };
     comparators[Student::KEYS::ENROLL_DATE] = [this](QString dateString){
         QDate date = QDate::fromString(dateString, Student::DATE_FORMAT);
-        return (date >= enrollDateLowerBound) && (date <= enrollDateHigherBound);
+        return (date >= this->enrollDateLowerBound) && (date <= this->enrollDateHigherBound);
     };
     comparators[Student::KEYS::GRADUATE_DATE] = [this](QString dateString){
         QDate date = QDate::fromString(dateString, Student::DATE_FORMAT);
-        return (date >= graduateDateLowerBound) && (date <= graduateDateHigherBound);
+        return (date >= this->graduateDateLowerBound) && (date <= this->graduateDateHigherBound);
     };
 }
 
-bool StudentSearchPattern::operator()(Student::const_ref student)
+StudentSearchPattern::StudentSearchPattern(const StudentSearchPattern &pattern)
+{
+    this->criteria = pattern.criteria;
+    this->comparators = pattern.comparators;
+
+    this->firstName = pattern.firstName;
+    this->secondName = pattern.secondName;
+    this->middleName = pattern.middleName;
+
+    this->birthDateLowerBound = pattern.birthDateLowerBound;
+    this->birthDateHigherBound = pattern.birthDateHigherBound;
+
+    this->enrollDateLowerBound = pattern.enrollDateLowerBound;
+    this->enrollDateHigherBound = pattern.enrollDateHigherBound;
+
+    this->graduateDateLowerBound = pattern.graduateDateLowerBound;
+    this->graduateDateHigherBound = pattern.graduateDateHigherBound;
+}
+
+bool StudentSearchPattern::isEmpty() const
+{
+    return std::all_of(criteria.begin(), criteria.end(), std::logical_not<bool>());
+}
+
+void StudentSearchPattern::reset()
+{
+    criteria.fill(false);
+}
+
+bool StudentSearchPattern::operator()(Student::const_ref student) const
 {
     for (int i = Student::KEYS::FIRST_NAME; i != Student::KEYS::GRADUATE_DATE; ++i)
     {
         Student::KEYS key = static_cast<Student::KEYS>(i);
-        if (!comparators[key](student.getByKey(key)))
+        if (criteria[key] && !comparators[key](student.getByKey(key)))
             return false;
     }
     return true;

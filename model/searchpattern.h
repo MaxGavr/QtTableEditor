@@ -8,10 +8,15 @@ class StudentSearchPattern
 {
 public:
     using Comparator = std::function <bool (QString)>;
+    static const int NUMBER_OF_CRITERIA;
 
     StudentSearchPattern();
+    StudentSearchPattern(const StudentSearchPattern &pattern);
 
-    bool operator() (Student::const_ref student);
+    bool isEmpty() const;
+    void reset();
+
+    bool operator() (Student::const_ref student) const;
 
     void setFirstName(const QString &value);
     void setSecondName(const QString &value);
@@ -22,7 +27,6 @@ public:
     void setGraduateDateBounds(const QDate &lower, const QDate &higher);
 
 private:
-    const int NUMBER_OF_CRITERIA = 6;
     QVector <bool> criteria;
     QVector <Comparator> comparators;
 
