@@ -38,3 +38,5 @@ HEADERS  += mainwindow.h \
     dialogs/searchwidget.h \
     dialogs/deletedialog.h
 
+RESOURCES += \
+    icons.qrc

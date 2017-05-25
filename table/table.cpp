@@ -75,13 +75,13 @@ void MultipageTable::manageLayouts()
 
 void MultipageTable::createPageControl()
 {
-    nextPageButton = new QPushButton(tr("->"), this);
+    nextPageButton = new QPushButton(QIcon(":/icons/icon_next_page.png"), QString(), this);
     connect(nextPageButton, SIGNAL(clicked(bool)), this, SLOT(goToNextPage()));
-    prevPageButton = new QPushButton(tr("<-"), this);
+    prevPageButton = new QPushButton(QIcon(":/icons/icon_previous_page.png"), QString(), this);
     connect(prevPageButton, SIGNAL(clicked(bool)), this, SLOT(goToPreviousPage()));
-    lastPageButton = new QPushButton(tr("-->"), this);
+    lastPageButton = new QPushButton(QIcon(":/icons/icon_last_page.png"), QString(), this);
     connect(lastPageButton, SIGNAL(clicked(bool)), this, SLOT(goToLastPage()));
-    firstPageButton = new QPushButton(tr("<--"), this);
+    firstPageButton = new QPushButton(QIcon(":/icons/icon_first_page.png"), QString(), this);
     connect(firstPageButton, SIGNAL(clicked(bool)), this, SLOT(goToFirstPage()));
 
     pageSizeInput = new QLineEdit(tr("Кол-во записей:"), this);
