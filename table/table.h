@@ -19,7 +19,10 @@ public:
     void writeStudentInTable(Student::const_ref student, int row);
     void clearTable();
 
+    void enforceEmpty(bool empty = false);
+    bool isEnforcedEmpty() const;
     bool isEmpty() const;
+
     int countStudents() const;
     int maxPages() const;
 
@@ -59,9 +62,9 @@ private:
 
     const StudentDatabase &database;
 
+    bool enforcedEmpty;
     int currentPage;
     int studentsPerPage;
     const int DEFAULT_STUDENTS_PER_PAGE = 10;
     const int TOTAL_COLUMNS = 4;
-    const int STARTING_PAGE = 0;
 };

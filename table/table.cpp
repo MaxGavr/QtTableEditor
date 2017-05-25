@@ -11,8 +11,9 @@ MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
     manageLayouts();
 
     setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
-    setCurrentPage(STARTING_PAGE);
+    goToFirstPage();
 
+    enforceEmpty(false);
     getPage();
     connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
     connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
@@ -23,12 +24,14 @@ MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
 
 void MultipageTable::getPage()
 {
-    clearTable();
-    StudentDatabase::StudentSet page = database.getSetOfStudents(getCurrentPage(),
-                                                                 getStudentsPerPage());
-    foreach (Student::const_ref student, page)
+    if (!isEnforcedEmpty())
     {
-        writeStudentInTable(student, page.indexOf(student));
+        clearTable();
+        students = database.getSetOfStudents(getCurrentPage(), getStudentsPerPage());
+        foreach (Student::const_ref student, students)
+        {
+            writeStudentInTable(student, students.indexOf(student));
+        }
     }
 }
 
@@ -159,7 +162,7 @@ void MultipageTable::setStudentsPerPage(int value)
 {
     studentsPerPage = value;
     pageSizeInput->setText(QString::number(getStudentsPerPage()));
-    setCurrentPage(STARTING_PAGE);
+    goToFirstPage();
 }
 
 void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
@@ -182,8 +185,21 @@ void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
 
 void MultipageTable::clearTable()
 {
+    students.clear();
     table->clearContents();
-    table->setRowCount(countStudents());
+    table->setRowCount(0);
+}
+
+void MultipageTable::enforceEmpty(bool empty)
+{
+    enforcedEmpty = empty;
+    if (empty)
+        clearTable();
+}
+
+bool MultipageTable::isEnforcedEmpty() const
+{
+    return enforcedEmpty;
 }
 
 bool MultipageTable::isEmpty() const

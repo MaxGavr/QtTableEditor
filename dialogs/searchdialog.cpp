@@ -5,6 +5,8 @@ SearchStudentDialog::SearchStudentDialog(DatabaseManager *mng, QWidget *parent)
 {
     setManager(mng);
     table = new MultipageTable(getManager()->getDatabase(), this);
+    table->enforceEmpty(true);
+
     searchWidget = new StudentSearchWidget(this);
 
     manageButtons();
@@ -57,6 +59,7 @@ void SearchStudentDialog::reject()
 
 void SearchStudentDialog::findStudents()
 {
+    table->enforceEmpty(false);
     manager->setSearchPattern(searchWidget->createPattern());
     table->goToFirstPage();
     table->getPage();
