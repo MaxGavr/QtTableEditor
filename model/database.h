@@ -23,8 +23,10 @@ public:
     StudentSet getSetOfStudents(int index, int amount) const;
 
     void addStudent(Student student);
-    void removeStudent(Student::const_ref student);
     void setSearchPattern(const StudentSearchPattern &pattern);
+
+    bool removeStudent(Student::const_ref student, bool notify = true);
+    void removeStudents(const StudentSearchPattern &pattern);
 
     bool contains(Student::const_ref student) const;
     bool validateStudent(Student::const_ref student) const;
@@ -38,6 +40,7 @@ public:
 signals:
     void studentAdded();
     void studentDeleted();
+    void studentsDeleted(int amount);
 
 private:
     const StudentSet &getStudents() const;

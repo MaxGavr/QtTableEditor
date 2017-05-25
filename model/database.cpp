@@ -52,13 +52,29 @@ void StudentDatabase::clearSearchResult()
     }
 }
 
-void StudentDatabase::removeStudent(Student::const_ref student)
+bool StudentDatabase::removeStudent(Student::const_ref student, bool notify)
 {
     if (contains(student))
     {
         students.removeOne(student);
-        emit studentDeleted();
+        if (notify)
+            emit studentDeleted();
+        return true;
     }
+    return false;
+}
+
+void StudentDatabase::removeStudents(const StudentSearchPattern &pattern)
+{
+    setSearchPattern(pattern);
+    int deletedStudents = 0;
+
+    foreach (Student::const_ref student, filteredStudents)
+        if (removeStudent(student, false))
+            deletedStudents++;
+
+    setSearchPattern(StudentSearchPattern());
+    emit studentsDeleted(deletedStudents);
 }
 
 bool StudentDatabase::contains(Student::const_ref student) const
