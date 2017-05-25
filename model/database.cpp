@@ -94,26 +94,17 @@ bool StudentDatabase::contains(Student::const_ref student) const
 
 bool StudentDatabase::validateStudent(Student::const_ref student) const
 {
-    bool isValid = true;
-    if (student.getFirstName().isEmpty() || student.getSecondName().isEmpty())
-    {
-        isValid = false;
-    }
+    bool hasFirstAndSecondName = !student.getFirstName().isEmpty() &&
+                                 !student.getSecondName().isEmpty();
 
     int studentAge = student.getBirthDate().daysTo(QDate::currentDate());
-    if ((studentAge / 365) < MIN_AGE)
-    {
-        isValid = false;
-    }
+    bool isMature = (studentAge / 365) >= MIN_AGE;
 
-    if (student.getEnrollmentDate() > student.getGraduationDate() ||
-            student.getEnrollmentDate() < student.getBirthDate() ||
-            student.getGraduationDate() < student.getBirthDate())
-    {
-        isValid = false;
-    }
+    bool correctDates = student.getEnrollmentDate() < student.getGraduationDate() &&
+                        student.getEnrollmentDate() > student.getBirthDate() &&
+                        student.getGraduationDate() > student.getBirthDate();
 
-    return isValid;
+    return hasFirstAndSecondName && isMature && correctDates;
 }
 
 int StudentDatabase::countStudents() const
@@ -141,14 +132,17 @@ const StudentDatabase::StudentSet &StudentDatabase::getStudents() const
 
 void StudentDatabase::clear()
 {
-    foreach (Student::const_ref student, students) {
+    foreach (Student::const_ref student, students)
         removeStudent(student);
-    }
 }
 
 bool StudentDatabase::validatePageBounds(int pageIndex, int studentsPerPage) const
 {
-    return pageIndex < countPages(studentsPerPage);
+    bool nonNegative = (pageIndex >= 0) && (studentsPerPage >= 0);
+    bool zeroPage = (pageIndex == 0);
+    return nonNegative && ((pageIndex < countPages(studentsPerPage)) || zeroPage);
+}
+
 bool StudentDatabase::isEmpty() const
 {
     return countStudents() == 0;

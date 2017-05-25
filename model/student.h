@@ -2,12 +2,11 @@
 
 #include <QString>
 #include <QDate>
-#include <QVariant>
 
 class Student
 {
 public:
-    typedef const Student& const_ref;
+    using const_ref = const Student&;
 
     enum KEYS {FIRST_NAME = 0, SECOND_NAME, MIDDLE_NAME,
                BIRTH_DATE, ENROLL_DATE, GRADUATE_DATE};

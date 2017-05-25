@@ -5,7 +5,6 @@ const QString Student::DATE_FORMAT = "dd.MM.yyyy";
 Student::Student()
     : Student("---", "---", "---", QDate::currentDate(), QDate::currentDate(), QDate::currentDate())
 {
-
 }
 
 Student::Student(const QString &first, const QString &second, const QString &middle,
@@ -24,7 +23,6 @@ Student::Student(Student::const_ref student)
     : Student(student.getFirstName(), student.getSecondName(), student.getMiddleName(),
               student.getBirthDate(), student.getEnrollmentDate(), student.getGraduationDate())
 {
-
 }
 
 QString Student::getByKey(KEYS key) const
@@ -145,10 +143,12 @@ void Student::setGraduationDate(const QDate &value)
 
 bool Student::operator==(const_ref student) const
 {
-    return (getFullName() == student.getFullName()) &&
-           (getBirthDate() == student.getBirthDate()) &&
-           (getEnrollmentDate() == student.getEnrollmentDate()) &&
-            (getGraduationDate() == student.getGraduationDate());
+    bool equalNames = (getFullName() == student.getFullName());
+    bool equalDates = (getBirthDate() == student.getBirthDate()) &&
+                      (getEnrollmentDate() == student.getEnrollmentDate()) &&
+                      (getGraduationDate() == student.getGraduationDate());
+
+    return equalNames && equalDates;
 }
 
 bool Student::operator!=(Student::const_ref student) const
