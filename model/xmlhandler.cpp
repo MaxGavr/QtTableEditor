@@ -46,17 +46,19 @@ bool XmlHandler::readFromFile(const QString &fileName)
             else if (stream.name() == XML_TAG_MIDDLE_NAME)
                 student.setMiddleName(stream.readElementText());
             else if (stream.name() == XML_TAG_BIRTH_DATE)
-                student.setBirthDate(parseData(stream.readElementText()));
+                student.setBirthDate(parseDate(stream.readElementText()));
             else if (stream.name() == XML_TAG_ENROLL_DATE)
-                student.setEnrollmentDate(parseData(stream.readElementText()));
+                student.setEnrollmentDate(parseDate(stream.readElementText()));
             else if (stream.name() == XML_TAG_GRADUATE_DATE)
-                student.setGraduationDate(parseData(stream.readElementText()));
+                student.setGraduationDate(parseDate(stream.readElementText()));
         }
         if (token == QXmlStreamReader::EndElement)
             if (stream.name() == XML_TAG_STUDENT)
-                database->addStudent(student);
+                database->addStudent(student, false);
     }
     file.close();
+    if (!database->isEmpty())
+        emit database->studentAdded();
     return true;
 }
 
@@ -115,8 +117,8 @@ QDomElement XmlHandler::writeStudent(QDomDocument &doc, const Student &student)
     return element;
 }
 
-QDate XmlHandler::parseData(const QString &stringData)
+QDate XmlHandler::parseDate(const QString &stringDate)
 {
-    QStringList list = stringData.split(".");
+    QStringList list = stringDate.split(".");
     return QDate(list[2].toInt(), list[1].toInt(), list[0].toInt());
 }

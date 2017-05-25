@@ -17,7 +17,7 @@ public:
 
 private:
     QDomElement writeStudent(QDomDocument &doc, const Student &student);
-    QDate parseData(const QString& stringData);
+    QDate parseDate(const QString& stringDate);
 
     StudentDatabase *database;
 
