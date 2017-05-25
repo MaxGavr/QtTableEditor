@@ -4,6 +4,7 @@
 
 class DatabaseManager
 {
+
 public:
     DatabaseManager(StudentDatabase *database);
 
@@ -15,6 +16,9 @@ public:
 
     void addStudent(const QString &first, const QString &second, const QString &middle,
                     const QDate &birth, const QDate &enrollment, const QDate &graduation);
+
+    void setSearchPattern(const StudentSearchPattern &pattern);
+    void resetSearchPattern();
 
 private:
     StudentDatabase *database;

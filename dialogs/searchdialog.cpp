@@ -14,7 +14,7 @@ SearchStudentDialog::SearchStudentDialog(DatabaseManager *mng, QWidget *parent)
 void SearchStudentDialog::manageButtons()
 {
     find = new QPushButton(tr("Найти"), this);
-    //connect(ok, SIGNAL(clicked(bool)), this, SLOT(addStudentToDatabase()));
+    connect(find, SIGNAL(clicked(bool)), this, SLOT(findStudents()));
     find->setDefault(true);
 
     cancel = new QPushButton(tr("Отмена"), this);
@@ -49,3 +49,15 @@ void SearchStudentDialog::setManager(DatabaseManager *value)
     manager = value;
 }
 
+void SearchStudentDialog::reject()
+{
+    getManager()->resetSearchPattern();
+    QDialog::reject();
+}
+
+void SearchStudentDialog::findStudents()
+{
+    manager->setSearchPattern(searchWidget->createPattern());
+    table->goToFirstPage();
+    table->getPage();
+}

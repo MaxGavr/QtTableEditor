@@ -19,6 +19,10 @@ public:
     DatabaseManager *getManager();
     void setManager(DatabaseManager *value);
 
+public slots:
+    virtual void reject();
+    void findStudents();
+
 private:
     void manageButtons();
     void manageLayouts();

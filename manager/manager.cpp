@@ -26,6 +26,16 @@ void DatabaseManager::addStudent(const QString &first, const QString &second, co
     database->addStudent(Student(first, second, middle, birth, enrollment, graduation));
 }
 
+void DatabaseManager::setSearchPattern(const StudentSearchPattern &pattern)
+{
+    database->setSearchPattern(pattern);
+}
+
+void DatabaseManager::resetSearchPattern()
+{
+    database->setSearchPattern(StudentSearchPattern());
+}
+
 const StudentDatabase &DatabaseManager::getDatabase() const
 {
     if (database)
