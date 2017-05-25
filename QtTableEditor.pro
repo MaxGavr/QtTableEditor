@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     model/xmlhandler.cpp \
     dialogs/searchdialog.cpp \
     model/searchpattern.cpp \
-    dialogs/searchwidget.cpp
+    dialogs/searchwidget.cpp \
+    dialogs/deletedialog.cpp
 
 HEADERS  += mainwindow.h \
     model/student.h \
@@ -34,4 +35,6 @@ HEADERS  += mainwindow.h \
     model/xmlhandler.h \
     dialogs/searchdialog.h \
     model/searchpattern.h \
-    dialogs/searchwidget.h
+    dialogs/searchwidget.h \
+    dialogs/deletedialog.h
+

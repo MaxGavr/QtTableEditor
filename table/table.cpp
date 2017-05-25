@@ -17,9 +17,11 @@ MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
     getPage();
     connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
     connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
+    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(getPage()));
 
     connect(&database, SIGNAL(studentAdded()), this, SLOT(updatePageLabel()));
     connect(&database, SIGNAL(studentDeleted()), this, SLOT(updatePageLabel()));
+    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(updatePageLabel()));
 }
 
 void MultipageTable::getPage()

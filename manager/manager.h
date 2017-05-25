@@ -20,6 +20,8 @@ public:
     void setSearchPattern(const StudentSearchPattern &pattern);
     void resetSearchPattern();
 
+    void deleteStudents(const StudentSearchPattern &pattern);
+
 private:
     StudentDatabase *database;
 };

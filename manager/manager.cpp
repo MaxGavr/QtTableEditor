@@ -31,6 +31,11 @@ void DatabaseManager::setSearchPattern(const StudentSearchPattern &pattern)
     database->setSearchPattern(pattern);
 }
 
+void DatabaseManager::deleteStudents(const StudentSearchPattern &pattern)
+{
+    database->removeStudents(pattern);
+}
+
 void DatabaseManager::resetSearchPattern()
 {
     database->setSearchPattern(StudentSearchPattern());

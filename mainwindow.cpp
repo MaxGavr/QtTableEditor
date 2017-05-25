@@ -48,6 +48,11 @@ void MainWindow::createActions()
     findStudentAction->setStatusTip(tr("Найти записи о студентах по заданным критериям"));
     connect(findStudentAction, SIGNAL(triggered(bool)), this, SLOT(showSearchDialog()));
 
+    deleteStudentAction = new QAction(tr("Удалить записи"), this);
+    deleteStudentAction->setShortcut(Qt::Key_3);
+    deleteStudentAction->setStatusTip(tr("Найти и удалить записи о студентах по заданным критериям"));
+    connect(deleteStudentAction, SIGNAL(triggered(bool)), this, SLOT(showDeleteDialog()));
+
     aboutQtAction = new QAction(tr("О Qt"), this);
     aboutQtAction->setStatusTip(tr("Показать справочную информацию о библиотеке Qt"));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -63,6 +68,7 @@ void MainWindow::createMenus()
     editMenu = menuBar()->addMenu(tr("Редактировать"));
     editMenu->addAction(addStudentAction);
     editMenu->addAction(findStudentAction);
+    editMenu->addAction(deleteStudentAction);
 
     helpMenu = menuBar()->addMenu(tr("Справка"));
     helpMenu->addAction(aboutQtAction);
@@ -79,6 +85,7 @@ void MainWindow::createToolBars()
     editToolBar = new QToolBar(tr("Редактировать"));
     editToolBar->addAction(addStudentAction);
     editToolBar->addAction(findStudentAction);
+    editToolBar->addAction(deleteStudentAction);
     addToolBar(Qt::LeftToolBarArea, editToolBar);
 }
 
@@ -147,5 +154,11 @@ void MainWindow::showAddDialog()
 void MainWindow::showSearchDialog()
 {
     SearchStudentDialog dialog(getManager(), this);
+    dialog.exec();
+}
+
+void MainWindow::showDeleteDialog()
+{
+    DeleteStudentDialog dialog(database, getManager(), this);
     dialog.exec();
 }
