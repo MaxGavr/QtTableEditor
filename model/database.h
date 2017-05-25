@@ -6,6 +6,7 @@
 #include <QFile>
 
 #include "student.h"
+#include "searchpattern.h"
 #include "xmlhandler.h"
 
 class StudentDatabase : public QObject
@@ -23,6 +24,7 @@ public:
 
     void addStudent(Student student);
     void removeStudent(Student::const_ref student);
+    void setSearchPattern(const StudentSearchPattern &pattern);
 
     bool contains(Student::const_ref student) const;
     bool validateStudent(Student::const_ref student) const;
@@ -38,8 +40,15 @@ signals:
     void studentDeleted();
 
 private:
+    const StudentSet &getStudents() const;
+
+    void filterStudents();
+    void clearSearchResult();
     void clear();
 
+    StudentSearchPattern pattern;
+
+    StudentSet filteredStudents;
     StudentSet students;
 
     XmlHandler xml;

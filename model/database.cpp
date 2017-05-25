@@ -20,12 +20,32 @@ StudentDatabase::StudentSet StudentDatabase::getSetOfStudents(int index, int amo
         return StudentSet();
 
     int initialPosition = index * amount;
-    return students.mid(initialPosition, amount);
+    return getStudents().mid(initialPosition, amount);
 }
 
 void StudentDatabase::addStudent(Student student)
+void StudentDatabase::setSearchPattern(const StudentSearchPattern &pattern)
 {
     if (!contains(student) && validateStudent(student))
+    this->pattern = pattern;
+    if (!this->pattern.isEmpty())
+        filterStudents();
+    else
+        clearSearchResult();
+}
+
+void StudentDatabase::filterStudents()
+{
+    clearSearchResult();
+    foreach (Student::const_ref student, students)
+        if (this->pattern(student))
+            filteredStudents.append(student);
+}
+
+void StudentDatabase::clearSearchResult()
+{
+    filteredStudents.clear();
+}
     {
         students.append(student);
         emit studentAdded();
@@ -72,7 +92,7 @@ bool StudentDatabase::validateStudent(Student::const_ref student) const
 
 int StudentDatabase::countStudents() const
 {
-    return students.count();
+    return getStudents().count();
 }
 
 int StudentDatabase::countPages(int studentsPerPage) const
@@ -83,6 +103,14 @@ int StudentDatabase::countPages(int studentsPerPage) const
 XmlHandler *StudentDatabase::getXmlHandler()
 {
     return &xml;
+}
+
+const StudentDatabase::StudentSet &StudentDatabase::getStudents() const
+{
+    if (this->pattern.isEmpty())
+        return students;
+    else
+        return filteredStudents;
 }
 
 void StudentDatabase::clear()
