@@ -149,7 +149,7 @@ void MainWindow::setManager(DatabaseManager *value)
 
 void MainWindow::showAddDialog()
 {
-    AddStudentDialog dialog(getManager(), this);
+    AddStudentDialog dialog(database, getManager(), this);
     dialog.exec();
 }
 

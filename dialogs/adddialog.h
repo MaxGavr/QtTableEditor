@@ -12,18 +12,20 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-class DatabaseManager;
+#include "../manager/manager.h"
 
 class AddStudentDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AddStudentDialog(DatabaseManager *mng, QWidget *parent);
+    explicit AddStudentDialog(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent);
 
     void setManager(DatabaseManager *value);
 
 public slots:
     void addStudentToDatabase();
+    void notifyInvalidInput();
+    void notifyDuplication();
 
 private:
     void manageButtons();
@@ -44,4 +46,5 @@ private:
     QPushButton *cancel;
 
     DatabaseManager *manager;
+    const StudentDatabase &database;
 };

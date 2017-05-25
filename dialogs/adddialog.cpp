@@ -1,8 +1,8 @@
 #include "adddialog.h"
-#include "../manager/manager.h"
+#include <QMessageBox>
 
-AddStudentDialog::AddStudentDialog(DatabaseManager *mng, QWidget *parent)
-    : QDialog(parent)
+AddStudentDialog::AddStudentDialog(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent)
+    : QDialog(parent), database(db)
 {
     setManager(mng);
 
@@ -26,6 +26,9 @@ AddStudentDialog::AddStudentDialog(DatabaseManager *mng, QWidget *parent)
     manageButtons();
     manageDateSwitcher();
     manageLayouts();
+
+    connect(&database, SIGNAL(invalidInsertion()), this, SLOT(notifyInvalidInput()));
+    connect(&database, SIGNAL(duplicateInsertion()), this, SLOT(notifyDuplication()));
 }
 
 void AddStudentDialog::addStudentToDatabase()
@@ -41,6 +44,22 @@ void AddStudentDialog::addStudentToDatabase()
     if (manager)
         manager->addStudent(first, second, middle,
                             birth, enroll, graduate);
+}
+
+void AddStudentDialog::notifyInvalidInput()
+{
+    QMessageBox::warning(this,
+                         tr("Ошибка"),
+                         tr("Введены некорректные сведения!"),
+                         QMessageBox::Ok);
+}
+
+void AddStudentDialog::notifyDuplication()
+{
+    QMessageBox::warning(this,
+                         tr("Ошибка"),
+                         tr("Запись о таком студенте уже существует!"),
+                         QMessageBox::Ok);
 }
 
 void AddStudentDialog::manageButtons()

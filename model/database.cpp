@@ -23,10 +23,8 @@ StudentDatabase::StudentSet StudentDatabase::getSetOfStudents(int index, int amo
     return getStudents().mid(initialPosition, amount);
 }
 
-void StudentDatabase::addStudent(Student student)
 void StudentDatabase::setSearchPattern(const StudentSearchPattern &pattern)
 {
-    if (!contains(student) && validateStudent(student))
     this->pattern = pattern;
     if (!this->pattern.isEmpty())
         filterStudents();
@@ -46,10 +44,22 @@ void StudentDatabase::clearSearchResult()
 {
     filteredStudents.clear();
 }
+
+void StudentDatabase::addStudent(Student student, bool notify)
+{
+    if (!contains(student))
     {
-        students.append(student);
-        emit studentAdded();
+        if (validateStudent(student))
+        {
+            students.append(student);
+            if (notify)
+                emit studentAdded();
+        }
+        else
+            emit invalidInsertion();
     }
+    else
+        emit duplicateInsertion();
 }
 
 bool StudentDatabase::removeStudent(Student::const_ref student, bool notify)
@@ -139,6 +149,9 @@ void StudentDatabase::clear()
 bool StudentDatabase::validatePageBounds(int pageIndex, int studentsPerPage) const
 {
     return pageIndex < countPages(studentsPerPage);
+bool StudentDatabase::isEmpty() const
+{
+    return countStudents() == 0;
 }
 
 
